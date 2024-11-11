@@ -1,7 +1,9 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
 import toast from "react-hot-toast";
+import { UserContext } from "../context/userContext";
 function LoginForm() {
   const navigate = useNavigate();
 
@@ -9,6 +11,7 @@ function LoginForm() {
     email: "",
     password: "",
   });
+  const { setUser } = useContext(UserContext);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -26,6 +29,7 @@ function LoginForm() {
 
       if (response.status === 200) {
         toast.success("Login successful!");
+        setUser(response.data);
         navigate("/");
       } else {
         toast.error("Unexpected response status");
