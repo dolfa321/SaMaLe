@@ -19,7 +19,7 @@ function LoginForm() {
       console.log("FormData", formData);
 
       // Axios POST request
-      const response = await axios.post("http://localhost:8080/auth/login", {
+      const response = await axios.post("/auth/login", {
         email,
         password,
       });

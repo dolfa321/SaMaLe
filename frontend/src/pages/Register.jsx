@@ -23,7 +23,7 @@ function RegisterForm() {
         return;
       }
 
-      const response = await axios.post("http://localhost:8080/auth/register", {
+      const response = await axios.post("/auth/register", {
         name,
         lastname,
         email,
