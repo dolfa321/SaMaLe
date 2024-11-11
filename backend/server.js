@@ -1,8 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db.js";
-import User from "./models/user.model.js";
-import Product from "./models/product.model.js";
 import routes from './routes/routes.js';
 
 dotenv.config();
