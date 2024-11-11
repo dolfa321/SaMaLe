@@ -3,8 +3,8 @@ import { generateContent, saveMessage, getChatHistory } from '../controllers/cha
 
 const router  = express.Router();
 
-router.post('/generate', generateContent);
-router.post('/save/:id', saveMessage);
-router.get('/history/:id', getChatHistory);
+router.post('/generate/:chatId', generateContent);
+router.post('/save/:chatId', saveMessage);
+router.get('/history/:chatId', getChatHistory);
 
 export default router;

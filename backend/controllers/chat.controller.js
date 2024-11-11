@@ -1,25 +1,38 @@
 import axios from 'axios';
 import dotenv from 'dotenv';
-
+import mongoose from 'mongoose';
+import Chat from '../models/chat.model.js';
 dotenv.config();
 
 const geminiApiKey = process.env.GEMINI_API_KEY;
 
 // Generate content using Gemini API with the entire chat history
 export const generateContent = async (req, res) => {
-    const { userId } = req.body;
-  
+    const { chatId } = req.params;
+    const { message } = req.body;
+
     try {
-      const chat = await Chat.findOne(req.params.id);
-    
-      const contents = chat.messages.map(message => ({
-        role: message.sender === 'user' ? 'user' : 'bot',
-        text: message.text
+        //TODO - get user id from token
+        let chat = await Chat.findById(chatId);
+
+        if (!chat) {
+            chat = new Chat({ _id: chatId, user: userId, messages: [{ text: message, sender: 'user' }] });;
+        }else{    
+            chat.messages.push({ text: message, sender: 'user' });
+        }
+
+      await chat.save();
+
+      const contents = chat.messages.map(msg => ({
+        content: {
+          parts: [{ text: msg.text }],
+          role: msg.sender === 'user' ? 'user' : 'model'
+        }
       }));
   
       const response = await axios.post(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${geminiApiKey}`,
-        { contents: [{ parts: contents }] },
+        { contents},
         { headers: { 'Content-Type': 'application/json' } }
       );
   
@@ -32,13 +45,13 @@ export const generateContent = async (req, res) => {
 
 // Save a new message to the chat history
 export const saveMessage = async (req, res) => {
-    const { id, text, sender } = req.body;
+    const { chatId, text, sender } = req.body;
   
     try {
-      let chat = await Chat.findOne(id);
+      let chat = await Chat.findById(chatId);
   
       if (!chat) {
-        chat = new Chat({ user: userId, messages: [] });
+        chat = new Chat({ messages: [] });
       }
   
       chat.messages.push({ text, sender });
@@ -52,10 +65,10 @@ export const saveMessage = async (req, res) => {
 
 // Retrieve chat history for a user
 export const getChatHistory = async (req, res) => {
-    const { id } = req.params;
+    const { chatId } = req.params.chatId;
   
     try {
-      const chat = await Chat.findOne(id);
+      const chat = await Chat.findById(chatId);
   
       if (!chat) {
         return res.status(404).json({ message: 'Chat history not found' });
