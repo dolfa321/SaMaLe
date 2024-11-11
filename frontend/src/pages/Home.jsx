@@ -1,7 +1,7 @@
 import React from 'react';
-import leftHand from '../assets//left-hand.png'; // Pot do leve slike roke
+import leftHand from '../assets//left-hand.png';
 import rightHand from '../assets/right-hand.png';
-import {Link} from "react-router-dom"; // Pot do desne slike roke
+import {Link} from "react-router-dom";
 
 const Home = () => {
     return (
@@ -25,7 +25,6 @@ const Home = () => {
                 Start Your Journey Today!
             </h2>
 
-            {/* Gumbi */}
             <div className="mt-10 flex flex-col space-y-3">
                 <Link to="/login">
                     <button

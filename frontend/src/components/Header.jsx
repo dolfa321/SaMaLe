@@ -1,10 +1,12 @@
 import React from 'react';
-import logo from '../assets/logotip.png'; // Pot do slike
-
+import logo from '../assets/logotip.png';
+import {Link} from "react-router-dom";
 const Header = () => {
     return (
         <header className="relative h-[130px] bg-white shadow-md flex items-center justify-center">
-            <img src={logo} alt="AI Logo" className="h-16" />
+            <Link to="/">
+                <img src={logo} alt="AI Logo" className="h-16 cursor-pointer" />
+            </Link>
         </header>
     );
 };
