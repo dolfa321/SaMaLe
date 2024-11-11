@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 function LoginForm() {
   const navigate = useNavigate();
 
@@ -23,32 +24,27 @@ function LoginForm() {
         password,
       });
 
-      console.log("Status Code:", response.status);
-      console.log("Response Data:", response.data);
-
-      // Check response status or data
       if (response.status === 200) {
-        // Successful login
+        toast.success("Login successful!");
         navigate("/");
       } else {
-        alert("Unexpected response status");
+        toast.error("Unexpected response status");
       }
     } catch (error) {
       if (error.response) {
-        // Server responded with a status other than 2xx
         console.log("Error Response:", error.response);
         console.log("Status Code:", error.response.status);
         console.log("Error Data:", error.response.data);
 
-        alert(`Error: ${error.response.data.message}`);
+        toast.error(`Error: ${error.response.data.message}`);
       } else if (error.request) {
         // Request was made, but no response was received
         console.log("No response received:", error.request);
-        alert("No response from the server. Please try again later.");
+        toast.error("No response from the server. Please try again later.");
       } else {
         // Something else happened
         console.log("Error:", error.message);
-        alert("An unexpected error occurred.");
+        toast.error("An unexpected error occurred.");
       }
     }
   };

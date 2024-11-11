@@ -10,6 +10,12 @@ export const createUser = async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
+    if (password.length < 6) {
+      return res
+        .status(400)
+        .json({ message: "Password must be at least 6 characters long" });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 12);
 
     const existingUser = await User.findOne({ email });

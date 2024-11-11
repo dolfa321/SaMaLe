@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 function RegisterForm() {
   const navigate = useNavigate();
@@ -18,26 +19,37 @@ function RegisterForm() {
       const { name, lastname, email, password, confirmPassword } = formData;
 
       if (password !== confirmPassword) {
-        alert("Passwords do not match");
+        toast.error("Passwords do not match");
         return;
       }
 
-      const { data } = await axios.post("http://localhost:8080/auth/register", {
+      const response = await axios.post("http://localhost:8080/auth/register", {
         name,
         lastname,
         email,
         password,
       });
 
-      if (data.error) {
-        alert(data.error);
-        return;
+      if (response.status === 201) {
+        toast.success("Registration successful!");
+        navigate("/login");
       }
-
-      navigate("/login");
-      console.log(data);
     } catch (error) {
-      console.log(error);
+      if (error.response) {
+        // Handle specific error responses
+        if (error.response.status === 400) {
+          toast.error(
+            error.response.data.message || "Registration failed!",
+            {}
+          );
+        } else {
+          toast.error(`Error: ${error.response.data.message}`);
+        }
+      } else {
+        // Generic error (e.g., network issues)
+        toast.error("An unexpected error occurred!");
+      }
+      console.log("Error:", error);
     }
   };
 
