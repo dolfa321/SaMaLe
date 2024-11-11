@@ -1,5 +1,97 @@
-import React from "react";
+import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+function LoginForm() {
+  const navigate = useNavigate();
 
-export default function Login() {
-  return <div>Login</div>;
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const { email, password } = formData;
+
+      console.log("FormData", formData);
+
+      // Axios POST request
+      const response = await axios.post("http://localhost:8080/auth/login", {
+        email,
+        password,
+      });
+
+      console.log("Status Code:", response.status);
+      console.log("Response Data:", response.data);
+
+      // Check response status or data
+      if (response.status === 200) {
+        // Successful login
+        navigate("/");
+      } else {
+        alert("Unexpected response status");
+      }
+    } catch (error) {
+      if (error.response) {
+        // Server responded with a status other than 2xx
+        console.log("Error Response:", error.response);
+        console.log("Status Code:", error.response.status);
+        console.log("Error Data:", error.response.data);
+
+        alert(`Error: ${error.response.data.message}`);
+      } else if (error.request) {
+        // Request was made, but no response was received
+        console.log("No response received:", error.request);
+        alert("No response from the server. Please try again later.");
+      } else {
+        // Something else happened
+        console.log("Error:", error.message);
+        alert("An unexpected error occurred.");
+      }
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-blue-100">
+      <div className="bg-blue-300 p-8 rounded-lg shadow-md w-full max-w-md">
+        <h2 className="text-2xl font-bold text-center mb-6">Welcome back</h2>
+        <form className="space-y-4" onSubmit={handleSubmit}>
+          <input
+            type="email"
+            placeholder="Email"
+            className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={formData.email}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={formData.password}
+            onChange={(e) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
+          />
+          <button
+            type="submit"
+            className="w-full bg-orange-500 text-white font-bold py-3 rounded-md hover:bg-orange-600 transition"
+          >
+            Login
+          </button>
+        </form>
+        <p className="text-center mt-4">
+          Don’t have an account?{" "}
+          <a href="/register" className="text-blue-700 font-semibold">
+            Register
+          </a>
+        </p>
+      </div>
+    </div>
+  );
 }
+
+export default LoginForm;
