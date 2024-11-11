@@ -4,9 +4,9 @@ import bcrypt from "bcrypt";
 // Create a new user
 export const createUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, lastname } = req.body;
 
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !lastname) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -19,6 +19,7 @@ export const createUser = async (req, res) => {
 
     const user = new User({
       name,
+      lastname,
       email,
       password: hashedPassword,
     });
@@ -26,6 +27,7 @@ export const createUser = async (req, res) => {
     res.status(201).json({
       id: user._id,
       name: user.name,
+      lastname: user.lastname,
       email: user.email,
     });
   } catch (error) {
@@ -78,6 +80,7 @@ export const getUserByEmail = async (req, res) => {
     res.status(200).json({
       id: user._id,
       name: user.name,
+      lastname: user.lastname,
       email: user.email,
     });
   } catch (error) {
@@ -88,10 +91,10 @@ export const getUserByEmail = async (req, res) => {
 // Update a user by ID
 export const updateUserById = async (req, res) => {
   try {
-    const { name, email } = req.body;
+    const { name, lastname, email } = req.body;
     const { userId } = req.params;
 
-    if (!name && !email) {
+    if (!name && !email && !lastname) {
       return res
         .status(400)
         .json({ message: "At least one field is required" });
@@ -102,6 +105,7 @@ export const updateUserById = async (req, res) => {
       {
         $set: {
           name: name,
+          lastname: lastname,
           email: email,
         },
       },
@@ -115,6 +119,7 @@ export const updateUserById = async (req, res) => {
     res.status(200).json({
       id: user._id,
       name: user.name,
+      lastname: user.lastname,
       email: user.email,
     });
   } catch (error) {
