@@ -97,6 +97,7 @@ export const getUserByEmail = async (req, res) => {
         if (err) {
           throw err;
         }
+        console.log(token);
         res.cookie("token", token, {}).json({
           id: user._id,
           name: user.name,
