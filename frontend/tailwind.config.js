@@ -7,6 +7,9 @@ module.exports = {
         raleway: ['Raleway', 'sans-serif'],
         roboto: ['Roboto', 'sans-serif'],
       },
+      colors: {
+        'custom-blue': '#98C1D9',
+      },
     },
   },
   plugins: [],
