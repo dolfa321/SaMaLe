@@ -30,7 +30,7 @@ function LoginForm() {
       if (response.status === 200) {
         toast.success("Login successful!");
         setUser(response.data);
-        navigate("/");
+        navigate("/chat");
       } else {
         toast.error("Unexpected response status");
       }
