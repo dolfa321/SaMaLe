@@ -104,6 +104,17 @@ The server should start running on the defined port (default: 8080).
   - 404: If the chat with the specified chatId does not exist.
   - 500: Error message if retrieving the chat history fails.
 
+#### 3. Retrieve All Chats for a User
+- **URL**: `/getAllChatsForUser/:userId`
+- **Method**: `GET`
+- **Description**: Fetches all chats associated with a specific user ID.
+- **Parameters**:
+  - `userId` (URL parameter) – The ID of the user whose chats to retrieve.
+- **Response**:
+  - 200: Returns an array of chat objects associated with the user.
+  - 404: If no chats are found for the specified user.
+  - 500: Error message if retrieving the chats fails.
+
 ### User Endpoints
 
 #### 1. Create User

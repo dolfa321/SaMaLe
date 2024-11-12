@@ -6,6 +6,7 @@ import { Toaster } from "react-hot-toast";
 import UserContextProvider from "./context/userContext";
 import axios from "axios";
 import Profile from "./pages/Profile";
+import Chat from "./pages/Chat";
 
 axios.defaults.baseURL = "http://localhost:8080";
 axios.defaults.withCredentials = true;
@@ -22,6 +23,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/chat" element={<Chat />} />
           </Routes>
         </div>
       </div>

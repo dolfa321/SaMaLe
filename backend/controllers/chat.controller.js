@@ -1,6 +1,8 @@
 import axios from 'axios';
 import dotenv from 'dotenv';
 import Chat from '../models/chat.model.js';
+import mongoose from 'mongoose';
+
 dotenv.config();
 
 const geminiApiKey = process.env.GEMINI_API_KEY;
@@ -9,6 +11,10 @@ const geminiApiKey = process.env.GEMINI_API_KEY;
 export const generateContent = async (req, res) => {
     const { chatId } = req.params;
     const { message, userId } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(chatId) && chatId !== '0') {
+      return res.status(400).json({ message: 'Invalid chat ID' });
+    }
 
     try {
         let chat;
@@ -40,7 +46,11 @@ export const generateContent = async (req, res) => {
 
       await chat.save();
 
-      res.status(200).json(response.data);
+      res.status(200).json({
+        chatId: chat._id,
+        messages: chat.messages,
+        modelResponse: response.data
+      });
     } catch (error) {
       console.error('Error response:', error.response ? error.response.data : error.message);
       res.status(500).json({ message: `Failed to generate content: ${error.response ? error.response.data.error.message : error.message}` });
@@ -83,3 +93,20 @@ export const getChatHistory = async (req, res) => {
       res.status(500).json({ message: `Failed to retrieve chat history: ${error.message}` });
     }
   };
+
+// Retrieve all chats for a user
+export const getAllChatsForUser = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const chats = await Chat.find({ user: userId });
+
+    if (!chats || chats.length === 0) {
+      return res.status(404).json({ message: 'No chats found for this user' });
+    }
+
+    res.status(200).json(chats);
+  } catch (error) {
+    res.status(500).json({ message: `Failed to retrieve chats: ${error.message}` });
+  }
+};
