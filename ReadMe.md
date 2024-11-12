@@ -23,12 +23,18 @@ cd <repository-folder>
 ### 2. Install Dependencies
 
 ```bash
+cd backend
+npm install
+```
+
+```bash
+cd frontend
 npm install
 ```
 
 ### 3. Configure Environment Variables
 
-Create a `.env` file in the root of the project with the following variables:
+Create a `.env` file in the root of backend the project with the following variables:
 
 ```plaintext
 MONGO_URI=mongodb+srv://<username>:<password>@cluster0.2r43jvg.mongodb.net/samalegpt?retryWrites=true&w=majority&appName=Cluster0
@@ -42,11 +48,19 @@ JWT_SECRET=your_secret_key
 
 ### 4. Start the Server
 
+## Backend 
+
+```bash
+npm run dev
+```
+
+## Frontend
+
 ```bash
 npm start
 ```
 
-The server should start running on the defined port (default: 3000).
+The server should start running on the defined port (default: 8080).
 
 ## API Endpoints
 
@@ -54,7 +68,7 @@ The server should start running on the defined port (default: 3000).
 
 #### 1. Generate Chat Content
 
-- **URL**: `/generateContent/:chatId`
+- **URL**: `chat/generateContent/:chatId`
 - **Method**: `POST`
 - **Description**: Generates a response based on the user's chat history using the Gemini API.
 - **Parameters**:
@@ -68,7 +82,7 @@ The server should start running on the defined port (default: 3000).
 
 #### 2. Save a New Message
 
-- **URL**: `/saveMessage`
+- **URL**: `chat/saveMessage`
 - **Method**: `POST`
 - **Description**: Adds a new message to an existing chat.
 - **Body**:
@@ -79,11 +93,22 @@ The server should start running on the defined port (default: 3000).
   - 201: Successfully saves the message to the chat.
   - 500: Error message if message saving fails.
 
+#### 3. Retrieve Chat History
+- **URL**: `/getChatHistory/:chatId`
+- **Method**: `GET`
+- **Description**: Fetches the entire chat history for a specific chat ID.
+- **Parameters**:
+  - `chatId` (URL parameter) – The ID of the chat to retrieve.
+- **Response**:
+  - 200: Returns the chat history as a JSON object.
+  - 404: If the chat with the specified chatId does not exist.
+  - 500: Error message if retrieving the chat history fails.
+
 ### User Endpoints
 
 #### 1. Create User
 
-- **URL**: `/createUser`
+- **URL**: `user/createUser`
 - **Method**: `POST`
 - **Description**: Registers a new user.
 - **Body**:
@@ -97,7 +122,7 @@ The server should start running on the defined port (default: 3000).
 
 #### 2. User Login by Email
 
-- **URL**: `/getUserByEmail`
+- **URL**: `user/getUserByEmail`
 - **Method**: `POST`
 - **Description**: Logs in the user and issues a JWT token.
 - **Body**:
@@ -109,7 +134,7 @@ The server should start running on the defined port (default: 3000).
 
 #### 3. Get User Session
 
-- **URL**: `/getUserSession`
+- **URL**: `user/getUserSession`
 - **Method**: `GET`
 - **Description**: Retrieves the currently logged-in user's session based on the JWT token in cookies.
 - **Response**:
@@ -118,7 +143,7 @@ The server should start running on the defined port (default: 3000).
 
 #### 4. Logout
 
-- **URL**: `/removeUserSession`
+- **URL**: `user/removeUserSession`
 - **Method**: `POST`
 - **Description**: Logs out the user by clearing the JWT token cookie.
 - **Response**:
